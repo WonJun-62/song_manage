@@ -2,6 +2,7 @@
 #include "playlist.c"
 #include "song_list.c"
 #include "search.c"
+#include "check.c"
 #include <stdio.h>
 
 #define STRING_SIZE 256
