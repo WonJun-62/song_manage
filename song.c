@@ -1,6 +1,6 @@
 #include "header.h"
-#include "playlist.c"
-#include "song_list.c"
+// #include "playlist.c"
+// #include "song_list.c"
 #include "search.c"
 #include "check.c"
 
@@ -31,15 +31,15 @@ int main(){
 
         switch (mode) {
         case 1: //노래 리스트 관리
-            song_list_menu();
+            // song_list_menu();
             break;
 
         case 2: //검색 기능
-            search();
+            searchMenu();
             break;
 
         case 3: //플레이리스트
-            playlistMenu();
+            // playlistMenu();
             break;
 
         case 4: //종료
