@@ -1,7 +1,7 @@
 
 #include "header.h"
 
-#define MAX 100000
+const int MAX = 100000;
 
 void playlistMenu()
 {
