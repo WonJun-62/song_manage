@@ -3,26 +3,14 @@
 #include "song_list.c"
 #include "search.c"
 #include "check.c"
-#include <stdio.h>
 
 #define STRING_SIZE 256
-
-// struct Song { //구조체
-//     char title[STRING_SIZE];    //제목
-//     char singer[STRING_SIZE];   //가수
-//     char composer[STRING_SIZE]; //작곡가
-//     char lyricist[STRING_SIZE]; //작사가
-//     char genre[STRING_SIZE];    //장르
-//     char playtime[STRING_SIZE]; //재생시간
-//     char album[STRING_SIZE];    //앨범명
-//     char release[STRING_SIZE];  //앨범출시날짜
-
-// };
 
 int main(){
     SetConsoleOutputCP(CP_UTF8);
     int mode;
     int err = 0;
+    check();
     while (1)
     {
         if (err == 0) {
