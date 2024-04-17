@@ -249,7 +249,7 @@ void searchWordOfTag(const char *filename, const char *tag, const char *word) {
     fclose(file);
 
     printf("\n메인화면으로 돌아가려면 아무키나 누르세요.");
-    _getwch(); // 한글은 엔터를 쳐야함... 수정필요...
+    _getwch(); // 한글은 엔터를 쳐야함.
     system("cls");
     main();
 }
