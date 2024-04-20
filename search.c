@@ -152,7 +152,7 @@ void searchTag() {
         printf("검색할 태그를 입력하세요 (0 입력 시 뒤로가기) : ");
         scanf("%s", tag);
 
-        if (strcmp(tag,"제목") == 0 || strcmp(&tag,"가수") == 0 || strcmp(&tag,"작곡가") == 0 || strcmp(&tag,"작사가") == 0 || strcmp(&tag,"장르") == 0 || strcmp(&tag,"재생시간") == 0 || strcmp(&tag,"앨범명") == 0 || strcmp(&tag,"앨범출시날짜") == 0) {
+        if (strcmp(tag,"제목") == 0 || strcmp(tag,"가수") == 0 || strcmp(tag,"작곡가") == 0 || strcmp(tag,"작사가") == 0 || strcmp(tag,"장르") == 0 || strcmp(tag,"재생시간") == 0 || strcmp(tag,"앨범명") == 0 || strcmp(tag,"앨범출시날짜") == 0) {
             printf("검색어를 입력하세요 (0 입력 시 뒤로가기) : ");
             scanf("%s", word);
             printf("\n");
@@ -165,7 +165,7 @@ void searchTag() {
             }
             break;
         }
-        else if(strcmp(&tag,"0") == 0){ // 뒤로가기
+        else if(strcmp(tag,"0") == 0){ // 뒤로가기
             searchMenu();
             break;
         }
@@ -210,7 +210,8 @@ void searchWordOfTag(const char *filename, const char *tag, const char *word) {
     char line[STRING_SIZE * 8]; // 가장 긴 라인의 길이를 기준으로 버퍼를 할당
     printf("제목 / 가수 / 작곡가 / 작사가 / 장르 / 재생시간 / 앨범명 / 앨범출시날짜\n");
     while (fgets(line, sizeof(line), file) != NULL) {
-        sscanf(line, "%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|]|%[^|\n]", song.title, song.singer, song.composer, song.lyricist, song.genre, song.playtime, song.album, song.release);
+        sscanf(line, "%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t\n]", song.title, song.singer, song.composer, song.lyricist, song.genre, song.playtime, song.album, song.release);
+
         
         if (strcmp(tag, "제목") == 0 && strstr(song.title, word) != NULL) {
             printf("%s / %s / %s / %s / %s / %s / %s / %s\n", 
