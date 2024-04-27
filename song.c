@@ -43,7 +43,7 @@ int main() {
             break;
 
         case 4: //종료
-
+            printf("프로그램을 종료합니다\n");
             return 0;
 
         default: //error
