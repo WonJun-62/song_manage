@@ -28,6 +28,7 @@ int main(){
         printf("4. 종료\n\n");
         printf("메뉴 선택 : ");
         scanf(" %d", &mode);
+        while (getchar() != '\n');
 
         switch (mode) {
         case 1: //노래 리스트 관리
