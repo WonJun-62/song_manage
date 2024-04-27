@@ -1,16 +1,10 @@
 #include "header.h"
-// #include "playlist.c"
-// #include "song_list.c"
-#include "search.c"
-#include "check.c"
 
 #define STRING_SIZE 256
 
-int main(){
-    SetConsoleOutputCP(CP_UTF8);
+int main() {
     int mode;
     int err = 0;
-    check();
     while (1)
     {
         if (err == 0) {
@@ -28,11 +22,11 @@ int main(){
         printf("4. 종료\n\n");
         printf("메뉴 선택 : ");
         scanf(" %d", &mode);
-        while (getchar() != '\n');
+        while (getchar() != '\n'); //입력 버터 비우기
 
         switch (mode) {
         case 1: //노래 리스트 관리
-            // song_list_menu();
+            song_list_menu();
             break;
 
         case 2: //검색 기능
@@ -40,7 +34,7 @@ int main(){
             break;
 
         case 3: //플레이리스트
-            // playlistMenu();
+            //playlistMenu();
             break;
 
         case 4: //종료
@@ -48,10 +42,11 @@ int main(){
             break;
 
         default: //error
+            //while (getchar() != '\n'); //입력 버터 비우기
             err = 1;
             break;
         }
     }
-    
+
     return 0;
 }

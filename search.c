@@ -1,7 +1,5 @@
 #include "header.h"
 
-#define STRING_SIZE 256
-
 struct Song {
     char title[STRING_SIZE];
     char singer[STRING_SIZE];
@@ -16,8 +14,8 @@ struct Song {
 //검색 함수 선언
 void search();
 // 노래 검색 함수 선언
-void searchSong(char* filename, char* searchWord, int found);
-
+int searchSong(char* filename, char* searchWord, int found);
+void searchMenu();//노래 검색 메뉴
 void searchTag(); //태그 검색
 void searchZero(const char* filename, const char* tag, const char* word);//태그 검색에서 0 입력시
 void searchWordOfTag(const char *filename, const char *tag, const char *word); //검색어 검색
@@ -97,7 +95,7 @@ void search() {
 }
 
 // 노래 검색 함수 정의
-void searchSong(char* filename, char* searchWord, int found) {
+int searchSong(char* filename, char* searchWord, int found) {
     FILE* file = fopen(filename, "r");
     found = 0;
     struct Song song;
@@ -236,7 +234,6 @@ void searchWordOfTag(const char *filename, const char *tag, const char *word) {
 
     printf("\n메인화면으로 돌아가려면 아무키나 누르세요.");
     _getwch(); // 한글은 엔터를 쳐야함.
-    while (getchar() != '\n');
     system("cls");
     // return;
     main();
