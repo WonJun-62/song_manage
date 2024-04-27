@@ -1,6 +1,11 @@
 #include "header.h"
+// #include "playlist.c"
+// #include "song_list.c"
+#include "search.c"
+#include "check.c"
+#define _CRT_SECURE_NO_WARNINGS 
 
-#define STRING_SIZE 256
+// #define STRING_SIZE 256
 
 int main() {
     int mode;
@@ -26,7 +31,7 @@ int main() {
 
         switch (mode) {
         case 1: //노래 리스트 관리
-            song_list_menu();
+            // song_list_menu();
             break;
 
         case 2: //검색 기능
@@ -39,7 +44,7 @@ int main() {
 
         case 4: //종료
 
-            break;
+            return 0;
 
         default: //error
             //while (getchar() != '\n'); //입력 버터 비우기

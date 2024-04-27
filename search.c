@@ -15,10 +15,11 @@ struct Song {
 void search();
 // 노래 검색 함수 선언
 int searchSong(char* filename, char* searchWord, int found);
+
 void searchMenu();//노래 검색 메뉴
 void searchTag(); //태그 검색
-void searchZero(const char* filename, const char* tag, const char* word);//태그 검색에서 0 입력시
-void searchWordOfTag(const char *filename, const char *tag, const char *word); //검색어 검색
+void searchZero(const char* tag, const char* word);//태그 검색에서 0 입력시
+void searchWordOfTag(const char *tag, const char *word); //검색어 검색
 
 void searchMenu(){
     int mode;
@@ -43,17 +44,17 @@ void searchMenu(){
 
         switch (mode) {
         case 1: //통합 검색
-            system("cls");
+            // system("cls");
             search();
             break;
 
         case 2: //태그 검색
-            system("cls");
+            // system("cls");
             searchTag();
             break;
 
         case 0: //뒤로 가기
-            system("cls");
+            // system("cls");
             return;
             // main();
             // break;
@@ -122,7 +123,7 @@ void searchTag() {
     int err = 0;
     int goback;
     while (1) {
-        system("cls");
+        // system("cls");
         if (err == 0) {
             printf("태그 검색을 선택하셨습니다.\n");
         } else {
@@ -140,11 +141,12 @@ void searchTag() {
             while (getchar() != '\n');
             printf("\n");
             if (word[0] == '0') {
-                searchZero("song_list.txt", tag, word);
+                searchMenu(); 
+                // searchZero(tag, word); // 2차 때 추가
                 break;
             } else {
                 // 검색 결과 출력
-                searchWordOfTag("song_list.txt", tag, word);
+                searchWordOfTag(tag, word);
             }
             break;
         }
@@ -158,7 +160,7 @@ void searchTag() {
     }
 }
 
-void searchZero(const char *filename, const char *tag, const char *word) {
+void searchZero(const char *tag, const char *word) {
     int err = 0;
     int goback = 0;
     while (1) {
@@ -178,7 +180,7 @@ void searchZero(const char *filename, const char *tag, const char *word) {
             searchTag();
             break;
         } else if (goback == 2) { // '0' 검색
-            searchWordOfTag("song_list.txt", tag, word);
+            searchWordOfTag(tag, word);
             break;
         } else {
             err = 1;
@@ -187,8 +189,8 @@ void searchZero(const char *filename, const char *tag, const char *word) {
     }
 }
 
-void searchWordOfTag(const char *filename, const char *tag, const char *word) {
-    FILE *file = fopen(filename, "r");
+void searchWordOfTag(const char *tag, const char *word) {
+    FILE *file = fopen("song_list.txt", "r");
 
     struct Song song;
     char line[STRING_SIZE * 8]; // 가장 긴 라인의 길이를 기준으로 버퍼를 할당
@@ -230,11 +232,13 @@ void searchWordOfTag(const char *filename, const char *tag, const char *word) {
         }
     }
 
+
+
     fclose(file);
 
     printf("\n메인화면으로 돌아가려면 아무키나 누르세요.");
     _getwch(); // 한글은 엔터를 쳐야함.
-    system("cls");
+    // system("cls");
     // return;
     main();
 }

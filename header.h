@@ -27,9 +27,9 @@ int searchSong(char* filename, char* searchWord, int found);
 
 void searchTag(); //태그 검색
 
-void searchZero(const char* filename, const char* tag, const char* word);//태그 검색에서 0 입력시
+void searchZero(const char* tag, const char* word);//태그 검색에서 0 입력시
 
-void searchWordOfTag(const char* filename, const char* tag, const char* word); //검색어 검색
+void searchWordOfTag(const char* tag, const char* word); //검색어 검색
 
 //void playlistMenu();//플레이리스트 화면에 처음 들어갔을 때
 
@@ -43,4 +43,4 @@ void searchWordOfTag(const char* filename, const char* tag, const char* word); /
 
 void add_song();//플레이리스트에 노래 추가
 
-//void song_dlt(const char* filename, const char* dlt_song);
+// void song_dlt(const char* filename, const char* dlt_song);

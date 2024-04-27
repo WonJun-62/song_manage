@@ -6,6 +6,7 @@ char* strltrim(char* s); //뒷 공백 제거
 char* trim(char* s); //앞뒤 공백 제거
 void duplicate_people(const char* filename, const char* people); //동명이인 확인
 int check_date(int y, int m, int d); //날짜 존재 여부 확인
+void song_dlt(const char* filename, const char* dlt_song);
 
 int IsSpace(char ch)
 {
