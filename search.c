@@ -109,8 +109,19 @@ int searchSong(char* filename, char* searchWord, int found) {
             strstr(song.genre, searchWord) != NULL || strstr(song.playtime, searchWord) != NULL ||
             strstr(song.album, searchWord) != NULL || strstr(song.release, searchWord) != NULL) {
             printf("제목 / 가수 / 작곡가 / 작사가 / 장르 / 재생시간 / 앨범명 / 앨범출시날짜\n");
-            printf("%s / %s / %s / %s / %s / %s / %s / %s\n",
-                song.title, song.singer, song.composer, song.lyricist, song.genre, song.playtime, song.album, song.release);
+            printf("%s / ", song.title);
+            printf("%s / ", song.singer);
+            printf("%s / ", song.composer);
+            printf("%s / ", song.lyricist);
+            int k = strlen(song.title) + strlen(song.singer)+ strlen(song.composer)+strlen(song.lyricist)+4; //공란 예외 처리
+            for (k; k < strlen(line); k++) {
+                if (line[k] == '\t')
+                    printf(" / ");
+                else
+                    printf("%c", line[k]);
+            }
+            // printf("%s / %s / %s / %s / %s / %s / %s / %s\n",
+            //     song.title, song.singer, song.composer, song.lyricist, song.genre, song.playtime, song.album, song.release);
             found = 1;
         }
     }

@@ -6,7 +6,6 @@ char* strltrim(char* s); //뒷 공백 제거
 char* trim(char* s); //앞뒤 공백 제거
 void duplicate_people(const char* filename, const char* people); //동명이인 확인
 int check_date(int y, int m, int d); //날짜 존재 여부 확인
-void song_dlt(const char* filename, const char* dlt_song);
 
 int IsSpace(char ch)
 {
@@ -133,16 +132,16 @@ void duplicate_people(const char* filename, const char* people) {
 }
 
 int check_date(int y, int m, int d) {
-    if (y > 1907 && y <= 2024 && m >= 1 && m <= 12) {	//년,월 범위
-        if ((y % 4) == 0 && (y % 100) != 0 || (y % 400) == 0) {	//윤년
+    if (y > 1907 && y <= 2024 && m >= 1 && m <= 12) {   //년,월 범위
+        if ((y % 4) == 0 && (y % 100) != 0 || (y % 400) == 0) {   //윤년
             int months[] = { 31,29,31,30,31,30,31,31,30,31,30,31 };
-            if (d >= 1 && d <= months[m - 1]) { return 1; }	//일 범위까지 맞으면 TRUE
-            else { return 0; }	//틀리면 FALSE
+            if (d >= 1 && d <= months[m - 1]) { return 1; }   //일 범위까지 맞으면 TRUE
+            else { return 0; }   //틀리면 FALSE
         }
-        else {	//평년
+        else {   //평년
             int months[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
-            if (d >= 1 && d <= months[m - 1]) { return 1; }	//일 범위까지 맞으면 TRUE
-            else { return 0; }	//틀리면 FALSE
+            if (d >= 1 && d <= months[m - 1]) { return 1; }   //일 범위까지 맞으면 TRUE
+            else { return 0; }   //틀리면 FALSE
         }
     }
     else { return 0; }
@@ -170,26 +169,22 @@ void song_list_menu() //노래 리스트 주 메뉴
         printf("0. 뒤로 가기\n");
         printf("\n메뉴 선택 : ");
         scanf(" %d", &mode);
-
+        while (getchar() != '\n'); //입력 버터 비우기
+        
         switch (mode) {
         case 1: //노래 리스트 출력
             song_list_print();
             break;
-
         case 2: //노래 추가
             add_song();
             break;
-
         case 3: //노래 삭제
             get_dlt_song(input_text); //삭제 문자열 입력 및 생성 후 삭제
             break;
-
         case 0: //뒤로 가기
-            while (getchar() != '\n'); //입력 버터 비우기
             return 0;
             break;
         default: //error
-            while (getchar() != '\n'); //입력 버터 비우기
             err = 1;
             break;
         }
@@ -237,7 +232,7 @@ void song_list_print()//노래 리스트 출력
                     else if (singer[size] == ' ') //띄어쓰기를 만났을 때
                     {
                         size = size + 1; //다음 인물의 이름으로 이동
-                        break; 
+                        break;
                     }
                 }
             }
@@ -308,238 +303,16 @@ void song_list_print()//노래 리스트 출력
             size++;
         }
 
-        printf("%s / ", genre); //장르 출력
-        printf("%s / ", playtime); //재생시간 출력
-        printf("%s / ", album_name); //앨범명 출력
-        printf("%s\n", album_time); //앨범 출시 날짜 출력
+        int k = strlen(name) + strlen(singer)+ strlen(song_writer)+strlen(lylic_writer)+4; //공란 예외 처리
+            for (k; k < strlen(song); k++) {
+                if (song[k] == '\t')
+                    printf(" / ");
+                else
+                    printf("%c", song[k]);
+            }
     }
     fclose(fp);
 }
-/*
-void song_add()//노래 추가
-{
-   char name[MAX_SIZE]; //제목
-   char singer[200]; //가수
-   char song_writer[200]; //작곡가
-   char lyric_writer[200]; //작사가
-   char genre[20]; //장르
-   int play_time_hour = 0, play_time_min = 0, play_time_sec = 0; //재생시간들
-   char album_name[200]; //앨범명
-   int album_year = 0, album_month = 0, album_day = 0;//앨범출시날짜
-
-   FILE* fp;
-   fp = fopen("song_list.txt", "a+");
-
-   //제목 입력
-   printf("\n제목을 입력하세요.\n\n");
-   printf("제목 : ");
-   int err=1;
-   getchar();
-   do
-   {
-      gets(name, MAX_SIZE);
-      if (strlen(name) == 0) //입력하지 않았을 때
-      {
-         printf("\n제목 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:좋니)\n\n");
-         printf("제목 : ");
-      }
-      else if (name[0] == ' ' || name[0] == '\t' || name[strlen(name) - 1] == ' ' || name[strlen(name) - 1] == '\t') //앞 뒤에 공백이 있을 때
-      {
-         printf("\n제목 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:좋니)\n\n");
-         printf("제목 : ");
-         name[0] = NULL;
-      }
-      else //맞는 입력일 때
-      {
-         err = 0;
-      }
-   } while (err == 1);
-   //printf("\n%s", name);
-
-   //가수 입력
-   printf("\n가수를 입력하세요.\n\n");
-   printf("가수 : ");
-   err = 1;
-   getchar();
-   do
-   {
-      gets(singer, 200);
-      if (strlen(singer) == 0) //입력하지 않았을 때
-      {
-         printf("\n가수 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("가수 : ");
-      }
-      else if (singer[0] == ' ' || singer[0] == '\t' || singer[strlen(singer) - 1] == ' ' || singer[strlen(singer) - 1] == '\t') //앞 뒤에 공백이 있을 때
-      {
-         printf("\n가수 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("가수 : ");
-         singer[0] = NULL;
-      }
-      else //맞는 입력일 때
-      {
-         err = 0;
-      }
-   } while (err == 1);
-   //printf("\n%s", singer);
-
-   //작곡가 입력
-   printf("\n작곡가를 입력하세요.\n\n");
-   printf("작곡가 : ");
-   err = 1;
-   getchar();
-   do
-   {
-      gets(song_writer, 200);
-      if (strlen(song_writer) == 0) //입력하지 않았을 때
-      {
-         printf("\n작곡가 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("작곡가 : ");
-      }
-      else if (song_writer[0] == ' ' || song_writer[0] == '\t' || song_writer[strlen(song_writer) - 1] == ' ' || song_writer[strlen(song_writer) - 1] == '\t') //앞 뒤에 공백이 있을 때
-      {
-         printf("\n작곡가 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("작곡가 : ");
-         song_writer[0] = NULL;
-      }
-      else //맞는 입력일 때
-      {
-         err = 0;
-      }
-   } while (err == 1);
-   //printf("\n%s", song_writer);
-
-   //작사가 입력
-   printf("\n작사가를 입력하세요.\n\n");
-   printf("작사가 : ");
-   err = 1;
-   getchar();
-   do
-   {
-      gets(lyric_writer, 200);
-      if (strlen(lyric_writer) == 0) //입력하지 않았을 때
-      {
-         printf("\n작사가 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("작사가 : ");
-      }
-      else if (lyric_writer[0] == ' ' || lyric_writer[0] == '\t' || lyric_writer[strlen(lyric_writer) - 1] == ' ' || lyric_writer[strlen(lyric_writer) - 1] == '\t') //앞 뒤에 공백이 있을 때
-      {
-         printf("\n작사가 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("작사가 : ");
-         lyric_writer[0] = NULL;
-      }
-      else //맞는 입력일 때
-      {
-         err = 0;
-      }
-   } while (err == 1);
-   //printf("\n%s", lyric_writer);
-
-   //작사가 입력
-   printf("\n작사가를 입력하세요.\n\n");
-   printf("작사가 : ");
-   err = 1;
-   getchar();
-   do
-   {
-      gets(lyric_writer, 200);
-      if (strlen(lyric_writer) == 0) //입력하지 않았을 때
-      {
-         printf("\n작사가 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("작사가 : ");
-      }
-      else if (lyric_writer[0] == ' ' || lyric_writer[0] == '\t' || lyric_writer[strlen(lyric_writer) - 1] == ' ' || lyric_writer[strlen(lyric_writer) - 1] == '\t') //앞 뒤에 공백이 있을 때
-      {
-         printf("\n작사가 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("작사가 : ");
-         lyric_writer[0] = NULL;
-      }
-      else //맞는 입력일 때
-      {
-         err = 0;
-      }
-   } while (err == 1);
-   //printf("\n%s", lyric_writer);
-
-   //장르 입력
-   printf("\n장르를 입력하세요.\n\n");
-   printf("장르 : ");
-   err = 1;
-   getchar();
-   do
-   {
-      gets(genre, 20);
-      if (strcmp(genre,"클래식")==0 || strcmp(genre, "재즈") == 0 || strcmp(genre, "팝") == 0 || strcmp(genre, "발라드") == 0 || strcmp(genre, "힙합") == 0 || strcmp(genre, "트로트") == 0 || strcmp(genre, "디스코") == 0 || strcmp(genre, "댄스") == 0) //맞는 입력일 때
-      {
-         err = 0;
-      }
-      else //규칙과 다를 때
-      {
-         printf("\n장르 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:재즈)\n\n");
-         printf("장르 : ");
-         genre[0] = NULL;
-      }
-   } while (err == 1);
-   //printf("\n%s", genre);
-
-   //재생시간 입력
-   printf("\n재생시간을 입력하세요.\n\n");
-   printf("재생시간 : ");
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-
-   //앨범명 입력
-   printf("\n앨범명을 입력하세요.\n\n");
-   printf("앨범명 : ");
-   err = 1;
-   getchar();
-   do
-   {
-      gets(album_name, 200);
-      if (strlen(album_name) == 0) //입력하지 않았을 때
-      {
-         printf("\n작사가 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("작사가 : ");
-      }
-      else if (album_name[0] == ' ' || album_name[0] == '\t' || album_name[strlen(album_name) - 1] == ' ' || album_name[strlen(album_name) - 1] == '\t') //앞 뒤에 공백이 있을 때
-      {
-         printf("\n작사가 입력이 잘못되었습니다. 정확히 입력해주세요.(예시:윤종신)\n\n");
-         printf("작사가 : ");
-         album_name[0] = NULL;
-      }
-      else //맞는 입력일 때
-      {
-         err = 0;
-      }
-   } while (err == 1);
-   //printf("\n%s", album_name);
-
-   //앨범 출시 날짜 입력
-   printf("\n앨범 출시 날짜를 입력하세요.\n\n");
-   printf("앨범 출시 날짜 : ");
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-   // 수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요수정필요
-}
-*/
 
 void add_song() {
     char title_buffer[STRING_SIZE] = "";   //제목
@@ -552,10 +325,10 @@ void add_song() {
     char release_buffer[STRING_SIZE];  //앨범출시날짜
 
     //입력을 저장할 변수
-    char title_result[STRING_SIZE] = "";	//제목
-    char singers_result[STRING_SIZE] = "";	//가수
-    char composers_result[STRING_SIZE] = "";	//작곡가
-    char lyricists_result[STRING_SIZE] = "";	//작사가
+    char title_result[STRING_SIZE] = "";   //제목
+    char singers_result[STRING_SIZE] = "";   //가수
+    char composers_result[STRING_SIZE] = "";   //작곡가
+    char lyricists_result[STRING_SIZE] = "";   //작사가
     char genre_result[STRING_SIZE] = "";    //장르
     char playtime_result[STRING_SIZE] = ""; //재생시간
     char album_result[STRING_SIZE] = "";    //앨범명
@@ -564,187 +337,187 @@ void add_song() {
     FILE* fp = fopen("song_list.txt", "a");   //추가모드로 파일 열기
 
 
-    printf("\n제목을 입력하세요.\n");	//제목
+    printf("\n제목을 입력하세요.\n");   //제목
     while (1) {
         printf("\n");
         printf("제목 :");
-        gets(title_buffer, STRING_SIZE);	//제목 입력받기
+        gets(title_buffer, STRING_SIZE);   //제목 입력받기
 
-        char* title = trim(title_buffer);	//앞뒤 공백 제거
+        char* title = trim(title_buffer);   //앞뒤 공백 제거
 
-        //printf("%s\n", title);			//제대로 입력되었는지 확인(검사)
-        if (strlen(title) == 0) {	//틀린 입력일 경우
+        //printf("%s\n", title);         //제대로 입력되었는지 확인(검사)
+        if (strlen(title) == 0) {   //틀린 입력일 경우
             printf("\n제목 입력이 잘못되었습니다.정확히 입력해주세요.(예시:좋니)\n");
             continue;
         }
-        else {		//맞는 입력일 경우
-            strcat(title_result, title);	//제목 저장
+        else {      //맞는 입력일 경우
+            strcat(title_result, title);   //제목 저장
         }
         break;
-    }	//제목 끝
+    }   //제목 끝
 
-    printf("\n가수를 입력하세요.\n");	//가수
+    printf("\n가수를 입력하세요.\n");   //가수
     while (1) {
         printf("\n");
         printf("가수 :");
-        gets(singers_buffer);	//가수 입력받기
+        gets(singers_buffer);   //가수 입력받기
 
-        char* singers = trim(singers_buffer);	//앞뒤 공백 제거
+        char* singers = trim(singers_buffer);   //앞뒤 공백 제거
 
-        if (strlen(singers) == 0) {	//틀린 입력일 경우
+        if (strlen(singers) == 0) {   //틀린 입력일 경우
             printf("\n가수 입력이 잘못되었습니다.정확히 입력해주세요.(예시:윤종신)\n");
             continue;
         }
-        else {		//맞는 입력일 경우
+        else {      //맞는 입력일 경우
             char* ptr_comma_q = singers;
             char* ptr_comma_p = strchr(singers, ',');
-            if (ptr_comma_p == NULL) {	//가수가 한명일 때
+            if (ptr_comma_p == NULL) {   //가수가 한명일 때
                 duplicate_people("song_list.txt", singers);
                 strcat(singers_result, singers);
             }
             else {
                 char first_singer_buffer[STRING_SIZE] = "";
-                strncpy(first_singer_buffer, ptr_comma_q, ptr_comma_p - ptr_comma_q);	//첫 가수 추출
-                char* first_singer = trim(first_singer_buffer);	//앞뒤 공백 제거
-                duplicate_people("song_list.txt", first_singer);	//중복확인
-                strcat(singers_result, first_singer);	//첫 가수 저장
-                while (ptr_comma_p != NULL) {	//가수가 더 있는지 확인
+                strncpy(first_singer_buffer, ptr_comma_q, ptr_comma_p - ptr_comma_q);   //첫 가수 추출
+                char* first_singer = trim(first_singer_buffer);   //앞뒤 공백 제거
+                duplicate_people("song_list.txt", first_singer);   //중복확인
+                strcat(singers_result, first_singer);   //첫 가수 저장
+                while (ptr_comma_p != NULL) {   //가수가 더 있는지 확인
                     char singer_buffer[STRING_SIZE] = "";
-                    strncpy(singer_buffer, ptr_comma_q + 1, ptr_comma_p - ptr_comma_q - 1);	//가수 추출
-                    char* singer = trim(singer_buffer);	//앞뒤 공백 제거
-                    duplicate_people("song_list.txt", singer);	//중복확인
+                    strncpy(singer_buffer, ptr_comma_q + 1, ptr_comma_p - ptr_comma_q - 1);   //가수 추출
+                    char* singer = trim(singer_buffer);   //앞뒤 공백 제거
+                    duplicate_people("song_list.txt", singer);   //중복확인
                     strcat(singers_result, " , ");
-                    strcat(singers_result, singer);	//가수 저장
+                    strcat(singers_result, singer);   //가수 저장
                     ptr_comma_q = ptr_comma_p;
                     ptr_comma_p = strchr(ptr_comma_p + 1, ',');
                 }
                 char last_singer_buffer[STRING_SIZE] = "";
                 ptr_comma_p = strrchr(singers, ',');
-                strncpy(last_singer_buffer, ptr_comma_p + 1, (singers + strlen(singers) - 1) - ptr_comma_p);	//마지막 가수 추출
-                char* last_singer = trim(last_singer_buffer);	//앞뒤 공백 제거
-                duplicate_people("song_list.txt", last_singer);	//중복확인
+                strncpy(last_singer_buffer, ptr_comma_p + 1, (singers + strlen(singers) - 1) - ptr_comma_p);   //마지막 가수 추출
+                char* last_singer = trim(last_singer_buffer);   //앞뒤 공백 제거
+                duplicate_people("song_list.txt", last_singer);   //중복확인
                 strcat(singers_result, " , ");
-                strcat(singers_result, last_singer);	//마지막 가수 저장
+                strcat(singers_result, last_singer);   //마지막 가수 저장
             }
         }
 
         break;
-    }		//가수 끝
+    }      //가수 끝
 
 
-    printf("\n작곡가를 입력하세요.\n");	//작곡가
+    printf("\n작곡가를 입력하세요.\n");   //작곡가
     while (1) {
         printf("\n");
         printf("작곡가 :");
-        gets(composers_buffer);	//작곡가 입력받기
+        gets(composers_buffer);   //작곡가 입력받기
 
-        char* composers = trim(composers_buffer);	//앞뒤 공백 제거
+        char* composers = trim(composers_buffer);   //앞뒤 공백 제거
 
-        if (strlen(composers) == 0) {	//틀린 입력일 경우
+        if (strlen(composers) == 0) {   //틀린 입력일 경우
             printf("\n작곡가 입력이 잘못되었습니다.정확히 입력해주세요.(예시:윤종신)\n");
             continue;
         }
-        else {		//맞는 입력일 경우
+        else {      //맞는 입력일 경우
             char* ptr_comma_q = composers;
             char* ptr_comma_p = strchr(composers, ',');
-            if (ptr_comma_p == NULL) {	//작곡가 한명일 때
+            if (ptr_comma_p == NULL) {   //작곡가 한명일 때
                 duplicate_people("song_list.txt", composers);
                 strcat(composers_result, composers);
             }
             else {
                 char first_composer_buffer[STRING_SIZE] = "";
-                strncpy(first_composer_buffer, ptr_comma_q, ptr_comma_p - ptr_comma_q);	//첫 작곡가 추출
-                char* first_composer = trim(first_composer_buffer);	//앞뒤 공백 제거
-                duplicate_people("song_list.txt", first_composer);	//중복확인
-                strcat(composers_result, first_composer);	//첫 작곡가 저장
-                while (ptr_comma_p != NULL) {	//작곡가가 더 있는지 확인
+                strncpy(first_composer_buffer, ptr_comma_q, ptr_comma_p - ptr_comma_q);   //첫 작곡가 추출
+                char* first_composer = trim(first_composer_buffer);   //앞뒤 공백 제거
+                duplicate_people("song_list.txt", first_composer);   //중복확인
+                strcat(composers_result, first_composer);   //첫 작곡가 저장
+                while (ptr_comma_p != NULL) {   //작곡가가 더 있는지 확인
                     char composer_buffer[STRING_SIZE] = "";
-                    strncpy(composer_buffer, ptr_comma_q + 1, ptr_comma_p - ptr_comma_q - 1);	//작곡가 추출
-                    char* composer = trim(composer_buffer);	//앞뒤 공백 제거
-                    duplicate_people("song_list.txt", composer);	//중복확인
+                    strncpy(composer_buffer, ptr_comma_q + 1, ptr_comma_p - ptr_comma_q - 1);   //작곡가 추출
+                    char* composer = trim(composer_buffer);   //앞뒤 공백 제거
+                    duplicate_people("song_list.txt", composer);   //중복확인
                     strcat(composers_result, " , ");
-                    strcat(composers_result, composer);	//작곡가 저장
+                    strcat(composers_result, composer);   //작곡가 저장
                     ptr_comma_q = ptr_comma_p;
                     ptr_comma_p = strchr(ptr_comma_p + 1, ',');
                 }
                 char last_composer_buffer[STRING_SIZE] = "";
                 ptr_comma_p = strrchr(composers, ',');
-                strncpy(last_composer_buffer, ptr_comma_p + 1, (composers + strlen(composers) - 1) - ptr_comma_p);	//마지막 가수 추출
-                char* last_composer = trim(last_composer_buffer);	//앞뒤 공백 제거
-                duplicate_people("song_list.txt", last_composer);	//중복확인
+                strncpy(last_composer_buffer, ptr_comma_p + 1, (composers + strlen(composers) - 1) - ptr_comma_p);   //마지막 가수 추출
+                char* last_composer = trim(last_composer_buffer);   //앞뒤 공백 제거
+                duplicate_people("song_list.txt", last_composer);   //중복확인
                 strcat(composers_result, " , ");
-                strcat(composers_result, last_composer);	//마지막 작곡가 저장
+                strcat(composers_result, last_composer);   //마지막 작곡가 저장
             }
         }
-        break;	//작곡가 끝
+        break;   //작곡가 끝
     }
 
-    printf("\n작사가를 입력하세요.\n");	//작사가
+    printf("\n작사가를 입력하세요.\n");   //작사가
     while (1) {
         printf("\n");
         printf("작사가 :");
-        gets(lyricists_buffer);	//작사가 입력받기
+        gets(lyricists_buffer);   //작사가 입력받기
 
-        char* lyricists = trim(lyricists_buffer);	//앞뒤 공백 제거
+        char* lyricists = trim(lyricists_buffer);   //앞뒤 공백 제거
 
-        if (strlen(lyricists) == 0) {	//틀린 입력일 경우
+        if (strlen(lyricists) == 0) {   //틀린 입력일 경우
             printf("\n작사가 입력이 잘못되었습니다.정확히 입력해주세요.(예시:윤종신)\n");
             continue;
         }
-        else {		//맞는 입력일 경우
+        else {      //맞는 입력일 경우
             char* ptr_comma_q = lyricists;
             char* ptr_comma_p = strchr(lyricists, ',');
-            if (ptr_comma_p == NULL) {	//작사가가 한명일 때
+            if (ptr_comma_p == NULL) {   //작사가가 한명일 때
                 duplicate_people("song_list.txt", lyricists);
                 strcat(lyricists_result, lyricists);
             }
             else {
                 char first_lyricist_buffer[STRING_SIZE] = "";
-                strncpy(first_lyricist_buffer, ptr_comma_q, ptr_comma_p - ptr_comma_q);	//첫 작사가 추출
-                char* first_lyricist = trim(first_lyricist_buffer);	//앞뒤 공백 제거
-                duplicate_people("song_list.txt", first_lyricist);	//중복확인
-                strcat(lyricists_result, first_lyricist);	//첫 작사가 저장
-                while (ptr_comma_p != NULL) {	//작사가가 더 있는지 확인
+                strncpy(first_lyricist_buffer, ptr_comma_q, ptr_comma_p - ptr_comma_q);   //첫 작사가 추출
+                char* first_lyricist = trim(first_lyricist_buffer);   //앞뒤 공백 제거
+                duplicate_people("song_list.txt", first_lyricist);   //중복확인
+                strcat(lyricists_result, first_lyricist);   //첫 작사가 저장
+                while (ptr_comma_p != NULL) {   //작사가가 더 있는지 확인
                     char lyricist_buffer[STRING_SIZE] = "";
-                    strncpy(lyricist_buffer, ptr_comma_q + 1, ptr_comma_p - ptr_comma_q - 1);	//작사가 추출
-                    char* lyricist = trim(lyricist_buffer);	//앞뒤 공백 제거
-                    duplicate_people("song_list.txt", lyricist);	//중복확인
+                    strncpy(lyricist_buffer, ptr_comma_q + 1, ptr_comma_p - ptr_comma_q - 1);   //작사가 추출
+                    char* lyricist = trim(lyricist_buffer);   //앞뒤 공백 제거
+                    duplicate_people("song_list.txt", lyricist);   //중복확인
                     strcat(lyricists_result, " , ");
-                    strcat(lyricists_result, lyricist);	//작사가 저장
+                    strcat(lyricists_result, lyricist);   //작사가 저장
                     ptr_comma_q = ptr_comma_p;
                     ptr_comma_p = strchr(ptr_comma_p + 1, ',');
                 }
                 char last_lyricist_buffer[STRING_SIZE] = "";
                 ptr_comma_p = strrchr(lyricists, ',');
-                strncpy(last_lyricist_buffer, ptr_comma_p + 1, (lyricists + strlen(lyricists) - 1) - ptr_comma_p);	//마지막 가수 추출
-                char* last_singer = trim(last_lyricist_buffer);	//앞뒤 공백 제거
-                duplicate_people("song_list.txt", last_singer);	//중복확인
+                strncpy(last_lyricist_buffer, ptr_comma_p + 1, (lyricists + strlen(lyricists) - 1) - ptr_comma_p);   //마지막 가수 추출
+                char* last_singer = trim(last_lyricist_buffer);   //앞뒤 공백 제거
+                duplicate_people("song_list.txt", last_singer);   //중복확인
                 strcat(lyricists_result, " , ");
-                strcat(lyricists_result, last_singer);	//마지막 작사가 저장
+                strcat(lyricists_result, last_singer);   //마지막 작사가 저장
             }
         }
-        break;	//작사가 끝
+        break;   //작사가 끝
     }
 
-    printf("\n장르를 입력하세요.\n");	//장르
+    printf("\n장르를 입력하세요.\n");   //장르
     while (1) {
         printf("\n");
         printf("장르 :");
         gets(genre_buffer);
 
-        char* genre = trim(genre_buffer);	//앞뒤 공백 제거
+        char* genre = trim(genre_buffer);   //앞뒤 공백 제거
 
-        if (strcmp(genre, "클래식") * strcmp(genre, "재즈") * strcmp(genre, "팝") * strcmp(genre, "발라드") * strcmp(genre, "힙합") * strcmp(genre, "트로트") * strcmp(genre, "디스코") * strcmp(genre, "댄스") == 0 || strlen(genre) == 0) {	//맞는 입력일 경우
-            strcat(genre_result, genre);	//장르 저장
+        if (strcmp(genre, "클래식") * strcmp(genre, "재즈") * strcmp(genre, "팝") * strcmp(genre, "발라드") * strcmp(genre, "힙합") * strcmp(genre, "트로트") * strcmp(genre, "디스코") * strcmp(genre, "댄스") == 0 || strlen(genre) == 0) {   //맞는 입력일 경우
+            strcat(genre_result, genre);   //장르 저장
         }
-        else {		//틀린 입력일 경우
+        else {      //틀린 입력일 경우
             printf("\n장르 입력이 잘못되었습니다.정확히 입력해주세요.(예시:재즈)\n");
             continue;
         }
         break;
-    }		//장르 끝
+    }      //장르 끝
 
-    printf("\n시간을 입력하세요.\n");	//재생시간
+    printf("\n시간을 입력하세요.\n");   //재생시간
     while (1) {
         char minute_str[STRING_SIZE] = "";
         char second_str[STRING_SIZE] = "";
@@ -755,7 +528,7 @@ void add_song() {
         printf("시간 :");
         gets(playtime_buffer);
 
-        char* playtime = trim(playtime_buffer);	//앞뒤 공백 제거
+        char* playtime = trim(playtime_buffer);   //앞뒤 공백 제거
 
         //"분","초" 각각 개수 세기
         char* ptr_m = strstr(playtime, "분");
@@ -772,20 +545,20 @@ void add_song() {
         }
 
         //재생시간 문법 형식 확인
-        if (strlen(playtime) == 0) { error = 1; }	//틀린 입력일 경우	
-        else if (count_m == 1 && count_s == 1) {	//모두 1개씩 있는 경우
+        if (strlen(playtime) == 0) { error = 1; }   //틀린 입력일 경우   
+        else if (count_m == 1 && count_s == 1) {   //모두 1개씩 있는 경우
             char* ptr_m = strstr(playtime, "분");
             char* ptr_s = strstr(playtime, "초");
-            if ((ptr_s - playtime) == strlen(playtime) - 2 && ptr_m < ptr_s) {	//"초"가 마지막이고 "분"이 "초"보다 앞에 있어야 됨
+            if ((ptr_s - playtime) == strlen(playtime) - 2 && ptr_m < ptr_s) {   //"초"가 마지막이고 "분"이 "초"보다 앞에 있어야 됨
                 strncpy(minute_str, playtime, ptr_m - playtime);
                 strncpy(second_str, ptr_m + 2, ptr_s - ptr_m - 2);
-                if (strchr(minute_str, ' ') || strchr(minute_str, '\t') || strchr(second_str, ' ') || strchr(second_str, '\t')) { error = 1; }	//공백이 없어야 됨
+                if (strchr(minute_str, ' ') || strchr(minute_str, '\t') || strchr(second_str, ' ') || strchr(second_str, '\t')) { error = 1; }   //공백이 없어야 됨
                 else {
-                    for (int i = 0; i < strlen(minute_str); i++)	//문자열이 숫자인지 확인
+                    for (int i = 0; i < strlen(minute_str); i++)   //문자열이 숫자인지 확인
                     {
                         if ((int)minute_str[i] < 48 || (int)minute_str[i] > 57) { error = 1; }
                     }
-                    for (int i = 0; i < strlen(second_str); i++)	//문자열이 숫자인지 확인
+                    for (int i = 0; i < strlen(second_str); i++)   //문자열이 숫자인지 확인
                     {
                         if ((int)second_str[i] < 48 || (int)second_str[i] > 57) { error = 1; }
                     }
@@ -793,13 +566,13 @@ void add_song() {
             }
             else { error = 1; }
         }
-        else if (count_m == 1 && count_s == 0) {	//입력에 "분"이 1개 있는 경우
+        else if (count_m == 1 && count_s == 0) {   //입력에 "분"이 1개 있는 경우
             char* ptr_m = strstr(playtime, "분");
-            if ((ptr_m - playtime) == strlen(playtime) - 2) {	//"분"이 마지막이어야 됨
+            if ((ptr_m - playtime) == strlen(playtime) - 2) {   //"분"이 마지막이어야 됨
                 strncpy(minute_str, playtime, ptr_m - playtime);
-                if (strchr(minute_str, ' ') || strchr(minute_str, '\t')) { error = 1; }	//공백이 없어야 됨
+                if (strchr(minute_str, ' ') || strchr(minute_str, '\t')) { error = 1; }   //공백이 없어야 됨
                 else {
-                    for (int i = 0; i < strlen(minute_str); i++)	//문자열이 숫자인지 확인
+                    for (int i = 0; i < strlen(minute_str); i++)   //문자열이 숫자인지 확인
                     {
                         if ((int)minute_str[i] < 48 || (int)minute_str[i] > 57) { error = 1; }
                     }
@@ -807,13 +580,13 @@ void add_song() {
             }
             else { error = 1; }
         }
-        else if (count_m == 0 && count_s == 1) {	//입력에 "초"가 1개 있는 경우
+        else if (count_m == 0 && count_s == 1) {   //입력에 "초"가 1개 있는 경우
             char* ptr_s = strstr(playtime, "초");
-            if ((ptr_s - playtime) == strlen(playtime) - 2) {	//"초"가 마지막이어야 됨
+            if ((ptr_s - playtime) == strlen(playtime) - 2) {   //"초"가 마지막이어야 됨
                 strncpy(second_str, playtime, ptr_s - playtime);
-                if (strchr(second_str, ' ') || strchr(second_str, '\t')) { error = 1; }	//공백이 없어야 됨
+                if (strchr(second_str, ' ') || strchr(second_str, '\t')) { error = 1; }   //공백이 없어야 됨
                 else {
-                    for (int i = 0; i < strlen(second_str); i++)	//문자열이 숫자인지 확인
+                    for (int i = 0; i < strlen(second_str); i++)   //문자열이 숫자인지 확인
                     {
                         if ((int)second_str[i] < 48 || (int)second_str[i] > 57) { error = 1; }
                     }
@@ -821,9 +594,9 @@ void add_song() {
             }
             else { error = 1; }
         }
-        else { error = 1; }		//나머지는 모두 틀린 경우
+        else { error = 1; }      //나머지는 모두 틀린 경우
 
-        if (error == 1) {		//오류 처리
+        if (error == 1) {      //오류 처리
             printf("\n시간 입력이 잘못되었습니다.정확히 입력해주세요.(예시:02분44초)\n");
             continue;
         }
@@ -831,51 +604,51 @@ void add_song() {
         //재생시간 의미 규칙 확인
         int minute = 0;
         int second = 0;
-        if (strcmp(minute_str, "")) {	//"분"이 공백이 아니면
+        if (strcmp(minute_str, "")) {   //"분"이 공백이 아니면
             minute = atoi(minute_str);
-            if (minute <= 0) { error = 1; }	//"분"은 0보다 크다
+            if (minute <= 0) { error = 1; }   //"분"은 0보다 크다
         }
-        if (strcmp(second_str, "")) {	//"초"가 공백이 아니면
+        if (strcmp(second_str, "")) {   //"초"가 공백이 아니면
             second = atoi(second_str);
-            if (second <= 0 || second >= 60) { error = 1; }	//"초"는 1~59사이
+            if (second <= 0 || second >= 60) { error = 1; }   //"초"는 1~59사이
         }
-        if (error == 1) {		//오류 처리
+        if (error == 1) {      //오류 처리
             printf("\n시간 입력이 잘못되었습니다.정확히 입력해주세요.(예시:02분44초)\n");
             continue;
         }
 
-        if (strcmp(minute_str, "")) {	//"분"이 공백이 아니면 "분" 저장
+        if (strcmp(minute_str, "")) {   //"분"이 공백이 아니면 "분" 저장
             sprintf(minute_str, "%02d", minute);
             strcat(playtime_result, minute_str);
             strcat(playtime_result, "분");
         }
-        if (strcmp(second_str, "")) {	//"초"가 공백이 아니면 "초" 저장
+        if (strcmp(second_str, "")) {   //"초"가 공백이 아니면 "초" 저장
             sprintf(second_str, "%02d", second);
             strcat(playtime_result, second_str);
             strcat(playtime_result, "초");
         }
         break;
-    }		//재생시간 끝
+    }      //재생시간 끝
 
-    printf("\n앨범명을 입력하세요.\n");	//앨범명
+    printf("\n앨범명을 입력하세요.\n");   //앨범명
     while (1) {
         printf("\n");
         printf("앨범명 :");
-        gets(album_buffer);	//앨범명 입력받기
+        gets(album_buffer);   //앨범명 입력받기
 
-        char* album = trim(album_buffer);	//앞뒤 공백 제거
+        char* album = trim(album_buffer);   //앞뒤 공백 제거
 
-        if (0) {	//틀린 입력일 경우(없음)
+        if (0) {   //틀린 입력일 경우(없음)
             printf("\n앨범명 입력이 잘못되었습니다.정확히 입력해주세요.(예시:밤양갱)\n");
             continue;
         }
-        else {		//맞는 입력일 경우
-            strcat(album_result, album);	//앨범명 저장
+        else {      //맞는 입력일 경우
+            strcat(album_result, album);   //앨범명 저장
         }
         break;
-    }	//앨범명 끝
+    }   //앨범명 끝
 
-    printf("\n앨범 출시 날짜를 입력하세요.\n");	//앨범 출시 날짜
+    printf("\n앨범 출시 날짜를 입력하세요.\n");   //앨범 출시 날짜
     while (1) {
         char year_str[5] = "";
         char month_str[3] = "";
@@ -888,7 +661,7 @@ void add_song() {
         printf("앨범 출시 날짜 :");
         gets(release_buffer);
 
-        char* release = trim(release_buffer);	//앞뒤 공백 제거
+        char* release = trim(release_buffer);   //앞뒤 공백 제거
 
         //'-','/','.' 각각 개수 세기
         char* ptr_hyphen_temp = strchr(release, '-');
@@ -912,30 +685,30 @@ void add_song() {
 
         //앨범 출시 날짜 문법 형식 확인
         if (strlen(release) == 10) {
-            if (count_hyphen == 2 && count_slash == 0 && count_dot == 0) {	//'-'이 2개인 경우
+            if (count_hyphen == 2 && count_slash == 0 && count_dot == 0) {   //'-'이 2개인 경우
                 char* ptr_hyphen_1 = strchr(release, '-');
                 char* ptr_hyphen_2 = strchr(ptr_hyphen_1 + 1, '-');
-                if ((ptr_hyphen_1 - release) == 4 && (ptr_hyphen_2 - ptr_hyphen_1) == 3) {	//년,월,일이 각각 4,2,2자리인지 확인
+                if ((ptr_hyphen_1 - release) == 4 && (ptr_hyphen_2 - ptr_hyphen_1) == 3) {   //년,월,일이 각각 4,2,2자리인지 확인
                     strncpy(year_str, release, 4);
                     strncpy(month_str, ptr_hyphen_1 + 1, 2);
                     strncpy(day_str, ptr_hyphen_2 + 1, 2);
                 }
                 else { error = 1; }
             }
-            else if (count_hyphen == 0 && count_slash == 2 && count_dot == 0) {	//'/'이 2개인 경우
+            else if (count_hyphen == 0 && count_slash == 2 && count_dot == 0) {   //'/'이 2개인 경우
                 char* ptr_slash_1 = strchr(release, '/');
                 char* ptr_slash_2 = strchr(ptr_slash_1 + 1, '/');
-                if ((ptr_slash_1 - release) == 4 && (ptr_slash_2 - ptr_slash_1) == 3) {	//년,월,일이 각각 4,2,2자리인지 확인
+                if ((ptr_slash_1 - release) == 4 && (ptr_slash_2 - ptr_slash_1) == 3) {   //년,월,일이 각각 4,2,2자리인지 확인
                     strncpy(year_str, release, 4);
                     strncpy(month_str, ptr_slash_1 + 1, 2);
                     strncpy(day_str, ptr_slash_2 + 1, 2);
                 }
                 else { error = 1; }
             }
-            else if (count_hyphen == 0 && count_slash == 0 && count_dot == 2) {	//'.'이 2개인 경우
+            else if (count_hyphen == 0 && count_slash == 0 && count_dot == 2) {   //'.'이 2개인 경우
                 char* ptr_dot_1 = strchr(release, '.');
                 char* ptr_dot_2 = strchr(ptr_dot_1 + 1, '.');
-                if ((ptr_dot_1 - release) == 4 && (ptr_dot_2 - ptr_dot_1) == 3) {	//년,월,일이 각각 4,2,2자리인지 확인
+                if ((ptr_dot_1 - release) == 4 && (ptr_dot_2 - ptr_dot_1) == 3) {   //년,월,일이 각각 4,2,2자리인지 확인
                     strncpy(year_str, release, 4);
                     strncpy(month_str, ptr_dot_1 + 1, 2);
                     strncpy(day_str, ptr_dot_2 + 1, 2);
@@ -949,22 +722,22 @@ void add_song() {
             strncpy(month_str, release + 4, 2);
             strncpy(day_str, release + 6, 2);
         }
-        else { error = 1; }	//나머지는 모두 틀린 경우
+        else { error = 1; }   //나머지는 모두 틀린 경우
 
         if (error == 1) {
             printf("\n앨범 출시 날짜 입력이 잘못되었습니다.정확히 입력해주세요.\n(예시:2024-04-01 또는 2024/04/01 또는 2024.04.01 또는 20240401)\n");
             continue;
         }
 
-        for (int i = 0; i < strlen(year_str); i++)	//문자열이 숫자인지 확인
+        for (int i = 0; i < strlen(year_str); i++)   //문자열이 숫자인지 확인
         {
             if ((int)year_str[i] < 48 || (int)year_str[i] > 57) { error = 1; }
         }
-        for (int i = 0; i < strlen(month_str); i++)	//문자열이 숫자인지 확인
+        for (int i = 0; i < strlen(month_str); i++)   //문자열이 숫자인지 확인
         {
             if ((int)month_str[i] < 48 || (int)month_str[i] > 57) { error = 1; }
         }
-        for (int i = 0; i < strlen(day_str); i++)	//문자열이 숫자인지 확인
+        for (int i = 0; i < strlen(day_str); i++)   //문자열이 숫자인지 확인
         {
             if ((int)day_str[i] < 48 || (int)day_str[i] > 57) { error = 1; }
         }
@@ -978,7 +751,7 @@ void add_song() {
         int year = atoi(year_str);
         int month = atoi(month_str);
         int day = atoi(day_str);
-        if (check_date(year, month, day)) {	//날짜 존재 여부 확인
+        if (check_date(year, month, day)) {   //날짜 존재 여부 확인
             sprintf(release_result, "%04d-%02d-%02d", year, month, day);
         }
         else {
@@ -986,7 +759,7 @@ void add_song() {
             continue;
         }
         break;
-    }		//앨범 출시 날짜 끝
+    }      //앨범 출시 날짜 끝
 
     fprintf(fp, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", title_result, singers_result, composers_result, lyricists_result, genre_result, playtime_result, album_result, release_result);
     fclose(fp);
@@ -1150,8 +923,8 @@ void song_dlt(const char* filename, const char* dlt_song) {   // dlt_song 문자
     char dlt_ans[STRING_SIZE];   // 삭제 여부 답변 입력 배열
     if (found) {
         printf("정말 삭제하시겠습니까? (Delete/...)\n");
-        scanf("%s", &dlt_ans);   // 삭제 여부
-        if (strcmp(dlt_ans, "Delete") == 0)   // "Delete"와 일치시 삭제 진행
+        fgets(dlt_ans, STRING_SIZE, stdin);
+        if (dlt_ans[0] == 'D' && dlt_ans[1] == 'e' && dlt_ans[2] == 'l' && dlt_ans[3] == 'e' && dlt_ans[4] == 't' && dlt_ans[5] == 'e' && dlt_ans[6] == '\n')   // "Delete"와 일치시 삭제 진행
             printf("성공적으로 노래를 삭제했습니다.\n");
         else
             return;   // 일치하지 않으면 리턴
