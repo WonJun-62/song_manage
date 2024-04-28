@@ -196,11 +196,22 @@ void searchWordOfTag(const char *tag, const char *word) {
     char line[STRING_SIZE * 8]; // 가장 긴 라인의 길이를 기준으로 버퍼를 할당
     printf("제목 / 가수 / 작곡가 / 작사가 / 장르 / 재생시간 / 앨범명 / 앨범출시날짜\n");
     while (fgets(line, sizeof(line), file) != NULL) {
-        sscanf(line, "%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t\n]", song.title, song.singer, song.composer, song.lyricist, song.genre, song.playtime, song.album, song.release);
+        sscanf(line, "%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t\n]", song.title, song.singer, song.composer, song.lyricist, song.genre, song.playtime, song.album, song.release);
         
         if (strcmp(tag, "제목") == 0 && strstr(song.title, word) != NULL) {
-            printf("%s / %s / %s / %s / %s / %s / %s / %s\n", 
-                   song.title, song.singer, song.composer, song.lyricist, song.genre, song.playtime, song.album, song.release);
+            printf("%s / ", song.title);
+            printf("%s / ", song.singer);
+            printf("%s / ", song.composer);
+            printf("%s / ", song.lyricist);
+            int k = strlen(song.title) + strlen(song.singer)+ strlen(song.composer)+strlen(song.lyricist)+4; //공란 예외 처리
+            for (k; k < strlen(line); k++) {
+                if (line[k] == '\t')
+                    printf(" / ");
+                else
+                    printf("%c", line[k]);
+            }
+            // printf("%s / %s / %s / %s / %s / %s / %s / %s\n", 
+            //        song.title, song.singer, song.composer, song.lyricist, song.genre, song.playtime, song.album, song.release);
         }
         else if (strcmp(tag, "가수") == 0 && strstr(song.singer, word) != NULL) {
             printf("%s / %s / %s / %s / %s / %s / %s / %s\n", 
