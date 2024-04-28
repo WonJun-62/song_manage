@@ -29,6 +29,8 @@ void searchTag(); //태그 검색
 
 void searchZero(const char* tag, const char* word);//태그 검색에서 0 입력시
 
+int searchWordExist(const char *tag, const char *word); //검색어 존재유무 판단
+
 void searchWordOfTag(const char* tag, const char* word); //검색어 검색
 
 //void playlistMenu();//플레이리스트 화면에 처음 들어갔을 때
