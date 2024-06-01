@@ -25,6 +25,7 @@ void searchWordOfTag(const char *tag, const char *word); //검색어 검색
 void searchMenu(){
     int mode;
     int err = 0;
+    char input[STRING_SIZE];
     while (1)
     {
         if (err == 0) {
@@ -40,8 +41,10 @@ void searchMenu(){
         printf("2. 태그 검색\n");
         printf("0. 뒤로 가기\n\n");
         printf("메뉴 선택 : ");
-        scanf(" %d", &mode);
-        while (getchar() != '\n');
+
+        fgets(input, sizeof(input), stdin);
+        input[strcspn(input, "\n")] = '\0'; // 엔터키 제거
+        sscanf(input, "%d", &mode);
 
         switch (mode) {
         case 1: //통합 검색
@@ -56,8 +59,8 @@ void searchMenu(){
 
         case 0: //뒤로 가기
             // system("cls");
-            return;
-            // main();
+            // return;
+            main();
             // break;
 
         default: //error
