@@ -48,20 +48,16 @@ void searchMenu(){
 
         switch (mode) {
         case 1: //통합 검색
-            // system("cls");
             search();
             break;
 
         case 2: //태그 검색
-            // system("cls");
             searchTag();
             break;
 
         case 0: //뒤로 가기
-            // system("cls");
             // return;
             main();
-            // break;
 
         default: //error
             while (getchar() != '\n'); //입력 버터 비우기
@@ -70,6 +66,7 @@ void searchMenu(){
         }
     }
 }
+
 // 검색 함수 정의
 void search() {
     // 검색할 파일명 지정
@@ -136,6 +133,8 @@ void searchTag() {
     char tag[STRING_SIZE], word[STRING_SIZE];
     int err = 0;
     int goback;
+    char input[STRING_SIZE]; // 입력 버퍼
+
     while (1) {
         // system("cls");
         if (err == 0) {
@@ -146,16 +145,23 @@ void searchTag() {
         }
         printf("(태그 = 제목/가수/작곡가/작사가/장르/재생시간/앨범명/앨범출시날짜)\n");
         printf("검색할 태그를 입력하세요 (0 입력 시 뒤로가기) : ");
-        scanf("%s", tag);
-        while (getchar() != '\n');
+        
+        if (fgets(input, sizeof(input), stdin) != NULL) {
+            input[strcspn(input, "\n")] = '\0'; // 엔터키 제거
+            sscanf(input, "%s", tag);
+        }
 
         if (strcmp(tag,"제목") == 0 || strcmp(tag,"가수") == 0 || strcmp(tag,"작곡가") == 0 || strcmp(tag,"작사가") == 0 || strcmp(tag,"장르") == 0 || strcmp(tag,"재생시간") == 0 || strcmp(tag,"앨범명") == 0 || strcmp(tag,"앨범출시날짜") == 0) {
             do {
                 printf("검색어를 입력하세요 (0 입력 시 뒤로가기) : ");
-                scanf("%s", word);
-                while (getchar() != '\n');
-                printf("\n");
                 
+                if (fgets(input, sizeof(input), stdin) != NULL) {
+                    input[strcspn(input, "\n")] = '\0'; // 엔터키 제거
+                    sscanf(input, "%s", word);
+                }
+
+                printf("\n");
+
                 if (word[0] == '0') {
                     searchMenu(); 
                     break;
@@ -171,11 +177,11 @@ void searchTag() {
             } while (1);
             break;
         }
-        else if(strcmp(tag,"0") == 0){ // 뒤로가기
+        else if (strcmp(tag, "0") == 0) { // 뒤로가기
             searchMenu();
             break;
         }
-        else { // 잘못입력
+        else { // 잘못 입력
             err = 1;
         }
     }
