@@ -19,7 +19,11 @@ void get_dlt_song(char* dlt_song);//삭제할 문자열 입력 및 생성
 
 void song_dlt(char* filename, char* dlt_song);//노래 삭제
 
-void searchMenu(); //노래 메뉴 함수
+int get_upd_song(char* selected_song, int* selected_line, char* songToChange);//노래 수정 문자열 입력 및 생성
+
+int update_song(char* selected_song, int selected_line, char* songToChange, char* updatedSong);//노래 수정
+
+void searchMenu();
 
 void search();// 노래 검색 함수 선언
 
@@ -27,11 +31,11 @@ int searchSong(char* filename, char* searchWord, int found);
 
 void searchTag(); //태그 검색
 
-void searchZero(const char* tag, const char* word);//태그 검색에서 0 입력시
+void searchZero(const char* filename, const char* tag, const char* word);//태그 검색에서 0 입력시
 
-int searchWordExist(const char *tag, const char *word); //검색어 존재유무 판단
+int searchWordExist(const char* tag, const char* word); //검색어 존재유무 판단
 
-void searchWordOfTag(const char* tag, const char* word); //검색어 검색
+void searchWordOfTag(const char* filename, const char* tag, const char* word); //검색어 검색
 
 //void playlistMenu();//플레이리스트 화면에 처음 들어갔을 때
 
@@ -45,4 +49,4 @@ void searchWordOfTag(const char* tag, const char* word); //검색어 검색
 
 void add_song();//플레이리스트에 노래 추가
 
-// void song_dlt(const char* filename, const char* dlt_song);
+void like_menu();
