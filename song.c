@@ -1,8 +1,9 @@
-
 #include "header.h"
-
 #include "playlist.h"
-
+#include "search.c"
+#include "song_list.c"
+#include "like.c"
+#include "playlist.c"
 
 #define STRING_SIZE 256
 
